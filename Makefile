@@ -1,5 +1,5 @@
 OBJCOPY = objcopy
-7Z		= 7z
+7Z      = 7z
 
 ESP_DIR = /efi
 GRMLEFI = grml/grml.efi
@@ -9,8 +9,8 @@ GRML_ISO     = grml64-small_2020.06.iso
 GRML_VMLINUZ = vmlinuz
 GRML_INITRD  = initrd
 GRML_ROOTFS  = grml/rootfs.squashfs
-GRML_OSREL	 = os-release
-CMDLINE		 = apm=power-off boot=live live-media-path=/grml/ nomce net.ifnames=0
+GRML_OSREL   = os-release
+CMDLINE      = apm=power-off boot=live live-media-path=/grml/ nomce net.ifnames=0
 CMDLINE_FILE = cmdline.txt
 
 .PHONY: all
