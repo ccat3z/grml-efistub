@@ -5,7 +5,9 @@ ESP_DIR = /efi
 GRMLEFI = grml/grml.efi
 EFISTUB = /usr/lib/systemd/boot/efi/linuxx64.efi.stub
 
-GRML_ISO     = grml64-small_2020.06.iso
+GRML_SUFFIX  = small
+GRML_VERSION = 2020.06
+GRML_ISO     = grml64-$(GRML_SUFFIX)_$(GRML_VERSION).iso
 GRML_VMLINUZ = vmlinuz
 GRML_INITRD  = initrd
 GRML_ROOTFS  = grml/rootfs.squashfs
@@ -18,16 +20,16 @@ all: $(GRMLEFI) $(GRML_ROOTFS)
 
 .INTERMEDIATE: $(GRML_VMLINUZ)
 $(GRML_VMLINUZ): $(GRML_ISO)
-	$(7Z) e -aoa $(GRML_ISO) boot/grml64small/$@ && touch $@
+	$(7Z) e -aoa $(GRML_ISO) boot/grml64$(GRML_SUFFIX)/$@ && touch $@
 
 .INTERMEDIATE: $(GRML_INITRD)
 $(GRML_INITRD): $(GRML_ISO)
-	$(7Z) e -aoa $(GRML_ISO) boot/grml64small/initrd.img && touch initrd.img
+	$(7Z) e -aoa $(GRML_ISO) boot/grml64$(GRML_SUFFIX)/initrd.img && touch initrd.img
 	mv initrd.img $@
 
 $(GRML_ROOTFS): $(GRML_ISO) | $(dir $(GRML_ROOTFS))
-	$(7Z) e -aoa $(GRML_ISO) live/grml64-small/grml64-small.squashfs && touch grml64-small.squashfs
-	mv grml64-small.squashfs $@
+	$(7Z) e -aoa $(GRML_ISO) live/grml64-$(GRML_SUFFIX)/grml64-$(GRML_SUFFIX).squashfs && touch grml64-$(GRML_SUFFIX).squashfs
+	mv grml64-$(GRML_SUFFIX).squashfs $@
 
 .INTERMEDIATE: $(GRML_OSREL)
 $(GRML_OSREL): $(GRML_ROOTFS)
@@ -55,6 +57,6 @@ clean:
 	-rm -r grml
 
 .PHONY: install
-install: $(GRMLEFI) $(GRML_ROOTFS)
-	install $(GRMLEFI) $(ESP_DIR)/grml
-	install $(GRML_ROOTFS) $(ESP_DIR)/grml
+install: $(GRMLEFI) $(GRML_ROOTFS) | $(ESP_DIR)/grml/
+	install $(GRMLEFI) $(ESP_DIR)/grml/grml.efi
+	install $(GRML_ROOTFS) $(ESP_DIR)/grml/rootfs.squashfs
